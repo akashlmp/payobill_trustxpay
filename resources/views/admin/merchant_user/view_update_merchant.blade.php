@@ -1,0 +1,505 @@
+@extends('admin.layout.header')
+@section('content')
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#active_services").select2();
+            viewActiveService();
+        });
+        function viewActiveService() {
+            $(".loader").show();
+            var token = $("input[name=_token]").val();
+            var user_id = $("#user_id").val();
+            var dataString = '&user_id=' + user_id + '&_token=' + token;
+            $.ajax({
+                type: "POST",
+                url: "{{url('admin/view-user-active-services')}}",
+                data: dataString,
+                success: function (msg) {
+                    $(".loader").hide();
+                    if (msg.status == 'success') {
+                        var active_services = msg.active_services;
+                        $.each(active_services.split(","), function (i, e) {
+                            $("#active_services option[value='" + e + "']").prop("selected", true);
+                        });
+                        $('#active_services').trigger('change');
+                    } else {
+                        swal("Failed", msg.message, "error");
+                    }
+                }
+            });
+        }
+        function create_users() {
+            $(".loader").show();
+            var token = $("input[name=_token]").val();
+            var first_name = $("#first_name").val();
+            var last_name = $("#last_name").val();
+            var email = $("#email").val();
+            var mobile = $("#mobile").val();
+            var status_id = $("#status").val();
+            var is_ip_whiltelist = $("#is_ip_whiltelist").val();
+            var merchant_ip = $("#merchant_ip").val();
+            var server_ip = $("#server_ip").val();
+
+            var address = $("#address").val();
+            var city = $("#city").val();
+            var state_id = $("#state_id").val();
+            var pin_code = $("#pin_code").val();
+
+            var user_id = $("#user_id").val();
+
+            var pan_number = $("#pan_number").val();
+            var gst_number = $("#gst_number").val();
+
+            var active_services = $("#active_services").val();
+            var latitude = $("#latitude").val();
+            var longitude = $("#longitude").val();
+            var callback_url = $("#callback_url").val();
+            var dataString = 'first_name=' + first_name + '&user_id=' + user_id + '&last_name=' + last_name + '&is_ip_whiltelist=' + is_ip_whiltelist + '&email=' + email + '&mobile=' + mobile + '&merchant_ip=' + merchant_ip + '&address=' + address + '&city=' + city + '&state_id=' + state_id + '&pin_code=' + pin_code + '&pan_number=' + pan_number + '&gst_number=' + gst_number + '&status_id=' + status_id + '&active_services=' + active_services + '&_token=' + token + "&latitude="+latitude+"&longitude="+longitude+"&callback_url="+callback_url+"&server_ip="+server_ip;
+            $.ajax({
+                type: "POST",
+                url: "{{url('admin/update-members-merchant')}}",
+                data: dataString,
+                success: function (msg) {
+                    $(".loader").hide();
+                    if (msg.status == 'success') {
+                        swal("Success", msg.message, "success");
+                        setTimeout(function () {
+                            location.reload(1);
+                        }, 3000);
+                    } else if (msg.status == 'validation_error') {
+                        $("#first_name_errors").text(msg.errors.first_name);
+                        $("#last_name_errors").text(msg.errors.last_name);
+                        $("#email_errors").text(msg.errors.email);
+                        $("#mobile_errors").text(msg.errors.mobile);
+                        $("#address_errors").text(msg.errors.address);
+                        $("#city_errors").text(msg.errors.city);
+                        $("#state_id_errors").text(msg.errors.state_id);
+                        $("#pin_code_errors").text(msg.errors.pin_code);
+                        $("#pan_number_errors").text(msg.errors.pan_number);
+                        $("#callback_url_errors").text(msg.errors.callback_url);
+                        $("#longitude_errors").text(msg.errors.longitude);
+                        $("#latitude_errors").text(msg.errors.latitude);
+                    } else {
+                        swal("Failed", msg.message, "error");
+                    }
+                }
+            });
+        }
+
+        function create_pancard_id() {
+            $(".loader").show();
+            var token = $("input[name=_token]").val();
+            var user_id = $("#user_id").val();
+            var dataString = 'user_id=' + user_id + '&_token=' + token;
+            $.ajax({
+                type: "POST",
+                url: "{{url('admin/create-pancard-id')}}",
+                data: dataString,
+                success: function (msg) {
+                    $(".loader").hide();
+                    if (msg.status == 'success') {
+                        swal("Success", msg.message, "success");
+                        setTimeout(function () {
+                            location.reload(1);
+                        }, 3000);
+                    } else {
+                        swal("Failed", msg.message, "error");
+                    }
+                }
+            });
+        }
+
+        function viewActiveService() {
+            $(".loader").show();
+            var token = $("input[name=_token]").val();
+            var user_id = $("#user_id").val();
+            var dataString = '&user_id=' + user_id + '&_token=' + token;
+            $.ajax({
+                type: "POST",
+                url: "{{url('admin/view-merchant-active-services')}}",
+                data: dataString,
+                success: function (msg) {
+                    $(".loader").hide();
+                    if (msg.status == 'success') {
+                        var active_services = msg.active_services;
+                        $.each(active_services.split(","), function (i, e) {
+                            $("#active_services option[value='" + e + "']").prop("selected", true);
+                        });
+                        $('#active_services').trigger('change');
+                    } else {
+                        swal("Failed", msg.message, "error");
+                    }
+                }
+            });
+        }
+    </script>
+
+    <div class="main-content-body">
+        {{--perssinal details--}}
+        <div class="row row-sm">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mg-b-2 mt-2">Basic details</h4>
+                            <i class="mdi mdi-dots-horizontal text-gray"></i>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">First Name</label>
+                                        <input type="text" id="first_name" value="{{ $first_name }}" class="form-control"
+                                               placeholder="First Name">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="name_errors"></li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Last Name </label>
+                                        <input type="text" id="last_name" value="{{ $last_name }}" class="form-control"
+                                               placeholder="Last Name">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="last_name_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Email Address</label>
+                                        <input type="text" id="email" value="{{ $email }}" class="form-control"
+                                               placeholder="Email Address">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="email_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Mobile Number</label>
+                                        <input type="text" id="mobile" value="{{ $mobile }}" class="form-control"
+                                               placeholder="Mobile Number">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="mobile_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="merchant_ip">Merchant ip</label>
+                                        <input type="text" id="merchant_ip" class="form-control" value="{{$merchant_ip}}"
+                                               placeholder="Merchant ip">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="merchant_ip_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <?php
+                                if($server_ip){
+                                    $server_ip = json_decode($server_ip);
+                                    $server_ip = implode(",",$server_ip);
+                                }
+                                ?>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="server_ip">Server ip</label>
+                                        <input type="text" id="server_ip" class="form-control" value="{{$server_ip}}"
+                                               placeholder="Server ip">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="server_ip_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Pan Number</label>
+                                        <input type="text" id="pan_number" value="{{ $pan_number }}"
+                                               class="form-control"
+                                               placeholder="Pan Number">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="pan_number_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">GST Number</label>
+                                        <input type="text" id="gst_number" value="{{ $gst_number }}"
+                                               class="form-control"
+                                               placeholder="GST Number">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="gst_number_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Status</label>
+                                        <select class="form-control select2" id="status">
+                                            <option value="">-- Select --</option>
+                                            <option value="1"
+                                                    @if($status==
+                                            '1') selected="selected" @endif>Active
+                                            </option>
+                                            <option value="0"
+                                                    @if($status==
+                                            '0') selected="selected" @endif>In-Active
+                                            </option>
+                                        </select>
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="status_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Is ip whiltelist?</label>
+                                        <select class="form-control select2" id="is_ip_whiltelist">
+                                            <option value="">-- Select --</option>
+                                            <option value="1"
+                                                    @if($is_ip_whiltelist==
+                                            '1') selected="selected" @endif>ON
+                                            </option>
+                                            <option value="0"
+                                                    @if($is_ip_whiltelist==
+                                            '0') selected="selected" @endif>Off
+                                            </option>
+                                        </select>
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="is_ip_whiltelist_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Webhook Url</label>
+                                        <input type="text" id="callback_url" value="{{$callback_url}}" class="form-control" placeholder="https://example.com/api/call-back/response">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="callback_url_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/div-->
+        </div>
+        {{--perssinal details clase--}}
+
+
+        {{--Permanent details--}}
+
+        <div class="row row-sm">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mg-b-2 mt-2">Permanent details </h4>
+                            <i class="mdi mdi-dots-horizontal text-gray"></i>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-body">
+                            <div class="row">
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Address</label>
+                                        <input class="form-control" id="address" placeholder="Address"
+                                               value="{{ $address }}">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="address_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">State</label>
+                                        <select class="form-control select2" id="state_id"
+                                                onchange="get_permanent_city(this)">
+                                            <option value="">Select State</option>
+                                            @foreach($states as $value)
+                                                <option value="{{ $value->id }}"
+                                                        @if($state== $value->id) selected="selected"
+                                                    @endif>{{ $value->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="state_id_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">City</label>
+                                        <select class="form-control select2" id="city">
+                                            <option value="">Select City</option>
+                                            @foreach($cities as $c)
+                                                <option @if($city==$c->city) selected
+                                                        @endif value="{{$c->city}}">{{$c->city}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        {{-- <input type="text" id="city" value="{{ $city }}" class="form-control"
+                                                    placeholder="City"> --}}
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="city_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Pincode</label>
+                                        <input type="text" id="pin_code" value="{{ $pincode }}" class="form-control"
+                                               placeholder="Pincode">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="pin_code_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Latitude</label>
+                                        <input type="text" id="latitude" value="{{$latitude}}" class="form-control onlyNumberDot" maxlength="9" placeholder="28.535517">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="latitude_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">Longitude</label>
+                                        <input type="text" id="longitude" value="{{$longitude}}" class="form-control onlyNumberDot" maxlength="9" placeholder="77.391029">
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="longitude_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                                {{--
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="name">District</label>
+                                        <select class="form-control select2" id="district_id">
+                                            <option value="">Select District</option>
+                                            @foreach($permanentdistrict as $value)
+                                            <option value="{{ $value->id }}" @if($district_id== $value->id)
+                                                selected="selected" @endif>{{ $value->district_name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="district_id_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                --}}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/div-->
+        </div>
+        {{--Permanent details close--}}
+
+
+        {{--service detail--}}
+        <div class="row row-sm">
+            <div class="col-xl-12">
+                <div class="card">
+                    {{-- <div class="card-header pb-0">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mg-b-2 mt-2">Service</h4>
+                            <i class="mdi mdi-dots-horizontal text-gray"></i>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="name">Active Service</label>
+                                        <select class="form-control select2" id="active_services"
+                                                style="width: 100%" multiple>
+                                            @foreach($services as $value)
+                                                <option value="{{ $value->id }}">{{ $value->service_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <ul class="parsley-errors-list filled">
+                                            <li class="parsley-required" id="active_services_errors"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> --}}
+                    <div class="card-footer">
+                        <input type="hidden" value="{{ $user_id }}" id="user_id">
+                        <button type="submit" class="btn btn-success waves-effect waves-light" onclick="create_users()">
+                            Save
+                            Details
+                        </button>
+                        @if(Auth::User()->role_id == 1 && Auth::User()->company->pancard == 1)
+                            <button type="submit" class="btn btn-info waves-effect waves-light"
+                                    onclick="create_pancard_id()">
+                                Create Pancard Id
+                            </button>
+                        @endif
+                        <a href="{{url()->previous()}}" class="btn btn-danger waves-effect waves-light"><i
+                                class="fas fa-backward"></i> Back</a>
+                    </div>
+                </div>
+            </div>
+            <!--/div-->
+
+        </div>
+        {{--service detail close--}}
+
+
+    </div>
+    </div>
+    </div>
+
+
+@endsection

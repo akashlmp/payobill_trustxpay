@@ -1,0 +1,29 @@
+name: Deployment to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment to UAT Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_SECRET_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            eval `ssh-agent -s`
+            ssh-add /home/ubuntu/.ssh/id_ed25519_github
+            cd /var/www/trustxpay/uat-trustxpay
+            git checkout main
+            git pull origin main
+            php artisan migrate
+            php artisan db:seed
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+            php artisan optimize

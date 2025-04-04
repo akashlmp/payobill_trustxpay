@@ -1,0 +1,4 @@
+"User Id","Joining Date","First Name","Last Name","Full Name",Mobile,"Email Id","Shop Name","Member Type","Retailer ID / Distributor ID","Normal Balance","Aeps Balance","Parent Name",Address,City,State,Pincode,"Office Address",Recharge,Money,Aeps,Payout,Pancard,Giftcard
+1,"2020-08-21 16:03:07",Super,Admin,-,1234567890,info@trustxpay.org,"shop name","Super Admin",-,250.00,0.00,,noia,noida,"Uttar Pradesh",201301,noida,"De Active","De Active","De Active","De Active","De Active","De Active"
+40,"2025-01-10 10:48:46",Test,Test,-,1122333312,anil.mathukiya@payomatix.com,shop,"Super Admin",-,0.00,0.00,,Noida,noida,"Uttar Pradesh",201301,noida,"De Active","De Active","De Active","De Active","De Active","De Active"
+41,"2025-01-10 11:39:35",Anil,Test,-,1122336658,tetete@tetetete.com,shop,"Super Admin",-,0.00,0.00,"Anil Test",Noida,noida,"Uttar Pradesh",201301,noida,"De Active","De Active","De Active","De Active","De Active","De Active"
